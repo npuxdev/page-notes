@@ -1,0 +1,2 @@
+document.querySelector('#inspect').onclick=async()=>{try { const [tab]=await chrome.tabs.query({active:true,currentWindow:true}); await chrome.scripting.executeScript({target:{tabId:tab.id},files:['core.js','lifecycle.js','content.js']}); window.close(); } catch(e) { document.querySelector('#status').textContent='Chrome blocks inspection here. Open a regular website. For local files, enable “Allow access to file URLs” in extension details.'; }};
+document.querySelector('#backlog').onclick=()=>chrome.runtime.openOptionsPage();
