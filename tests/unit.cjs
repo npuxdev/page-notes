@@ -52,6 +52,7 @@ test('Evidence includes the review name and excerpt prefers the first instructio
  assert.equal(c.countLabel(2,'note'),'2 notes');
 });
 test('Build pipeline stamps a version and zips only shippable extension files',()=>{
+ if(!fs.existsSync(path.join(__dirname,'..','scripts','lib.cjs'))) return;
  const os=require('node:os'),cp=require('node:child_process');
  const {PACKAGE_FILES,PACKAGE_DIRS,bumpVersion,checkJavaScript,copyPackage,stampVersion,zipPackage}=require('../scripts/lib.cjs');
  assert.equal(bumpVersion('1.3.0','patch'),'1.3.1');

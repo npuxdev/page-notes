@@ -2,3 +2,7 @@ node_modules/
 dist/
 .DS_Store
 preview.png
+*.pem
+keys/
+branding/
+scripts/
