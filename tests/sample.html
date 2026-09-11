@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>Page Notes sample — __VERSION__</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f3f1e9;color:#172a34;font:18px/1.5 system-ui,sans-serif}
+header{background:#12212d;color:#edf4f5;padding:18px 28px;display:flex;justify-content:space-between;gap:16px;align-items:center}
+header strong{font-size:20px}header span{color:#9ae9c6;font-size:13px}
+main{max-width:920px;margin:auto;padding:36px 24px 80px}
+.banner{background:#e4eee8;border:1px solid #c6d9ce;border-radius:10px;padding:14px 16px;font-size:15px;margin-bottom:28px}
+article{width:min(420px,100%);padding:28px;background:white;border-radius:16px;box-shadow:0 8px 24px #172a3414}
+small{color:#5c7268;letter-spacing:.08em}h1{font-size:45px;line-height:1.1;margin:8px 0 12px}
+button,a.button{display:inline-block;padding:14px 18px;border:0;border-radius:8px;background:#176749;color:white;font:650 16px system-ui;text-decoration:none;cursor:pointer}
+.row{display:flex;flex-wrap:wrap;gap:28px;margin-top:36px}
+.card{flex:1 1 240px;background:white;border-radius:14px;padding:20px;border:1px solid #dfe5de}
+#empty{min-height:140px;border:1px dashed #b7c6bd;border-radius:14px;margin-top:36px;padding:18px;color:#5c7268}
+#shadow{margin-top:28px}label{display:block;font-size:14px;margin-bottom:6px}input{width:100%;padding:10px;font:16px system-ui}
+</style>
+<body>
+<header>
+  <div><strong>ACME / WORKSPACE</strong><div>Sample page for local Page Notes testing</div></div>
+  <span>Page Notes __VERSION__</span>
+</header>
+<main>
+  <p class="banner">Load unpacked from the repo root or <code>dist/page-notes</code>, then choose <strong>Point at this page</strong>. Mock panel (no extension): <a href="/preview">/preview</a>. Help: <a href="/START-HERE.html">START-HERE.html</a>.</p>
+  <article>
+    <small>ACME / WORKSPACE</small>
+    <h1 id="hero">Make room for better ideas.</h1>
+    <p>Bring the whole team into the conversation.</p>
+    <button id="cta" onclick="this.textContent='ACTIVATED'">Start a project</button>
+  </article>
+  <div class="row">
+    <section class="card">
+      <h2>Pricing</h2>
+      <p>Simple plans for teams that review websites together.</p>
+      <a class="button" href="#cta">See plans</a>
+    </section>
+    <section class="card">
+      <h2>Support</h2>
+      <p>Questions stay on this page so you can pin comments to real copy.</p>
+      <label for="email">Work email</label>
+      <input id="email" type="email" value="alex@acme.test">
+    </section>
+  </div>
+  <div id="empty">Empty region for drag-rectangle notes.</div>
+  <div id="shadow"></div>
+</main>
+<script>
+document.querySelector('#shadow').attachShadow({mode:'open'}).innerHTML='<button>Shadow button</button>';
+</script>
+</body>
+</html>

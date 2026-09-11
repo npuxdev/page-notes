@@ -6,13 +6,19 @@ A dependency-free Chrome Manifest V3 extension for turning visual page feedback 
 
 ## Install
 
-End-user installation is in [README.md](README.md). Developers can load the repository root unpacked, or build first and load `dist/page-notes`.
+End-user installation is in [README.md](README.md). Load the repository root unpacked in Chrome Developer mode — the folder that contains `manifest.json`. That is what GitHub visitors download. A local `dist/page-notes` package is optional for maintainers.
 
 No account, API key, or server is required. The runtime extension has no npm dependencies; Node is used only for tests, version stamping, and the distributable build.
 
 ## Versioning and build
 
-`package.json` is the canonical version. `node scripts/build.cjs` stamps that version into `manifest.json` and the docs, then writes a loadable package to `dist/page-notes` and a shareable `dist/page-notes-<version>.zip`. The zip root is a `page-notes` folder, matching the README install steps.
+`package.json` is the canonical version. `node scripts/build.cjs` stamps that version into `manifest.json` and the docs, then writes:
+
+- `dist/page-notes/` and `dist/page-notes-<version>.zip` for optional unpacked sharing. GitHub visitors install from the repository root, not this zip.
+- `dist/chrome-web-store/page-notes-<version>.zip` for Chrome Web Store upload. `manifest.json` is at the zip root; developer docs are omitted.
+- `dist/chrome-web-store/page-notes-<version>.crx`, a CRX3 of that same store package, plus a JSON sidecar with the extension id.
+
+The first CRX build writes `keys/page-notes.pem` (gitignored). Back it up; it pins the CRX id. CI uses `PAGE_NOTES_PEM` when that secret is set, otherwise it signs with an ephemeral key.
 
 ```
 node --test tests/unit.cjs
@@ -26,7 +32,7 @@ node scripts/version.cjs patch    # also minor, major, or 1.4.0
 node scripts/version.cjs --stamp  # rewrite versioned files from package.json
 ```
 
-`npm test`, `npm run build`, and `npm run version:patch` are aliases. CI runs the unit tests, builds the zip, and uploads it as an artifact. `dist/` is generated and gitignored. Load unpacked from `dist/page-notes` when testing the package that will be shared.
+`npm start` (or `npm run preview`) serves the current version at `http://127.0.0.1:8765/`. That sample page is for pointing with a loaded unpacked extension. `http://127.0.0.1:8765/preview` injects the latest `content.js` with mock storage. Use `--no-open` to skip launching a browser. `PORT` overrides the port.
 
 ## Workflow
 
@@ -100,7 +106,8 @@ API references: https://developer.chrome.com/docs/extensions/reference/api/scrip
 ## Files and development
 
 - `package.json`: canonical version and npm script aliases.
-- `scripts/build.cjs` / `scripts/version.cjs`: distributable package and version stamps.
+- `scripts/build.cjs` / `scripts/version.cjs`: unpacked zip, Chrome Web Store zip/CRX, and version stamps.
+- `keys/page-notes.pem`: CRX signing key, created on first store build and gitignored.
 - `manifest.json`: permissions and extension entry points.
 - `background.js`: serialized draft/backlog storage operations.
 - `popup.html` / `popup.js`: activation and backlog launcher.
@@ -109,12 +116,14 @@ API references: https://developer.chrome.com/docs/extensions/reference/api/scrip
 - `lifecycle.js`: tab-local open/minimize/close/selection state.
 - `backlog.html`: full-page backlog manager.
 - `branding/`: announcement artwork; omitted from `dist/`.
+- `scripts/preview.cjs`: local sample page and mock-panel server.
+- `tests/sample.html` / `tests/preview.html`: local test pages; preview injects the panel with mock storage.
 - `tests/smoke.cjs`: browser integration test.
 
 To run the browser smoke test, install Playwright in your development environment and its Chromium browser, then run `node tests/smoke.cjs` with Playwright available to Node. It copies the same shippable files as the dist package and grants the disposable copy all-URLs host permission for screenshot capture to simulate the user's toolbar access grant; the shipped manifest retains activeTab-only access.
 
 ## Validation in this delivery
 
-JavaScript syntax checks and Node tests (`node --test tests/unit.cjs`) cover compact Markdown, full JSON evidence, ZIP extraction/checksums using Python, concurrent backlog updates, draft isolation and cleanup, storage error recovery, manifest entry points, screenshot coordinate scaling, capture throttling, inactive/switched-tab protection, close/minimize behavior, independent tab state, Escape behavior, repeated activation, copy-edit identifier preservation, exact instruction export, empty/multiline/literal replacement text, version stamps, and the dist package contents. Chrome storage and screenshot/canvas APIs are mocked in these Node tests; image rendering is not visually verified by them.
+JavaScript syntax checks and Node tests (`node --test tests/unit.cjs`) cover compact Markdown, full JSON evidence, ZIP extraction/checksums using Python, concurrent backlog updates, draft isolation and cleanup, storage error recovery, manifest entry points, screenshot coordinate scaling, capture throttling, inactive/switched-tab protection, close/minimize behavior, independent tab state, Escape behavior, repeated activation, copy-edit identifier preservation, exact instruction export, empty/multiline/literal replacement text, version stamps, the dist package contents, the Chrome Web Store zip layout, CRX3 packing, and the local preview server. Chrome storage and screenshot/canvas APIs are mocked in these Node tests; image rendering is not visually verified by them.
 
-Full browser integration and visual verification remain pending: the available browser security policy blocks the local test fixture. Lifecycle regressions were verified against the production state module in Node, not through live tab interaction. `tests/smoke.cjs` is provided for local execution. `tests/preview.html` is a development-only UI fixture with mock storage; it deliberately reports screenshot capture unavailable outside the installed extension.
+Full browser integration and visual verification remain pending: the available browser security policy blocks the local test fixture. Lifecycle regressions were verified against the production state module in Node, not through live tab interaction. `tests/smoke.cjs` is provided for local execution. `npm start` serves `tests/sample.html` for unpacked-extension testing; `/preview` is the mock-storage UI fixture and reports screenshot capture unavailable outside the installed extension.

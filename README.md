@@ -4,23 +4,33 @@
 
 Page Notes lets you select parts of a website, add comments, suggest new wording, and save annotated screenshots. It prepares feedback; it does not change the website for you.
 
-This is a directly shared preview version, installed from a folder rather than the Chrome Web Store. You do not need to write code, create an account, or pay for an API key.
+This GitHub repository **is** the installable extension. Load the downloaded folder in Chrome Developer mode. You do not need the Chrome Web Store, an account, or an API key.
 
-**Prefer a regular webpage-style guide? Double-click `START-HERE.html` in this folder.**
+**Prefer a webpage-style guide?** After you download the folder, open `START-HERE.html` in a browser.
 
 ## 1. Get the folder ready
 
 Use Google Chrome on a **Mac or Windows computer**. These instructions do not work in Chrome on a phone or tablet.
 
-1. Download the Page Notes ZIP file you received.
+1. Open [npuxdev/page-notes](https://github.com/npuxdev/page-notes). Click **Code**, then **Download ZIP**.
 2. Unzip it:
    - **Mac:** double-click the ZIP file in Finder.
    - **Windows:** right-click the ZIP file, choose **Extract All**, then **Extract**.
-3. Open the extracted folder and find the folder named **page-notes**.
-4. Move **page-notes** somewhere you will keep it, such as your **Documents** folder.
-5. Open **page-notes**. You should see a file named **manifest.json**. You do not need to open or edit that file; it tells you that you have found the right folder.
+3. You should have a folder named **page-notes-main** (GitHub adds `-main` to the download). Open it.
+4. Confirm you see **manifest.json**. Chrome needs these files in that same folder (do not move them into subfolders):
+   - `manifest.json`
+   - `background.js`
+   - `popup.html` and `popup.js`
+   - `backlog.html`
+   - `content.js`, `core.js`, and `lifecycle.js`
+   - `icons/icon-16.png`, `icon-32.png`, `icon-48.png`, and `icon-128.png`
+5. Move **page-notes-main** somewhere you will keep it, such as your **Documents** folder.
+
+If you use Git, `git clone https://github.com/npuxdev/page-notes.git` and install from the **page-notes** folder instead. It contains the same files.
 
 **Keep this folder in place after installing. Chrome uses it to run Page Notes.** You can delete the downloaded ZIP afterward, but keep the extracted folder.
+
+If any of the files above are missing, download the ZIP again from GitHub. Do not load a feedback-export ZIP (those contain `feedback.md` and screenshots, not the extension).
 
 ## 2. Add Page Notes to Chrome
 
@@ -28,7 +38,7 @@ Use Google Chrome on a **Mac or Windows computer**. These instructions do not wo
 2. Click the address bar at the top, type **chrome://extensions**, and press **Enter**. Type it into the address bar, not a search box on a webpage.
 3. Turn on **Developer mode** in the upper-right corner. This is simply the setting Chrome uses to load an extension from a folder.
 4. Click **Load unpacked**, near the upper-left corner.
-5. Find and select the **page-notes** folder you placed in Documents. Choose **Select Folder** or **Open**, depending on your computer. Select the folder containing **manifest.json**, not the ZIP file or its outer folder.
+5. Find and select the folder you placed in Documents (**page-notes-main** from the GitHub ZIP, or **page-notes** if you cloned). Choose **Select Folder** or **Open**, depending on your computer. Select the folder that contains **manifest.json**, not the ZIP file.
 6. A card named **Page Notes — Feedback for Agents** should appear. Make sure its on/off switch is on.
 7. Click the **puzzle-piece icon** beside Chrome's address bar. Find **Page Notes** and click its **pin** so the mint page-and-cursor icon stays in your toolbar.
 
@@ -85,12 +95,12 @@ Saved reviews stay in this Chrome profile. They do not sync to another computer.
 
 ## 7. Install an update
 
-Updates are manual for this directly shared version.
+Updates are manual for this preview.
 
 1. In the current version, save or export feedback you want to keep.
-2. Download and unzip the new ZIP into a temporary location, such as Downloads.
-3. Open the new **page-notes** folder. Copy everything **inside** it.
-4. Open the **existing page-notes folder you originally installed**, such as Documents/page-notes. Paste the copied files there and choose **Replace** when asked. Keep the existing folder in the same place. Do not put the new page-notes folder inside the old one.
+2. Download a fresh ZIP from GitHub (**Code** → **Download ZIP**) and unzip it into a temporary location, such as Downloads.
+3. Open the new folder (**page-notes-main**). Copy everything **inside** it.
+4. Open the **existing folder you originally installed**, such as Documents/page-notes-main. Paste the copied files there and choose **Replace** when asked. Keep the existing folder in the same place. Do not put the new folder inside the old one.
 5. In Chrome, go to **chrome://extensions**.
 6. Find the Page Notes card and click its **Reload** button (a circular arrow).
 7. Refresh every webpage where you had Page Notes open. This clears the old version's controls.
@@ -101,7 +111,7 @@ Do not click **Remove** to update. Removing the extension deletes its saved back
 
 | What you see | What to do |
 | --- | --- |
-| “Manifest file is missing” or the folder will not load | Unzip the download first. Choose the folder that contains **manifest.json**. You may need to open one more folder. |
+| “Manifest file is missing” or the folder will not load | Unzip the GitHub download first. Choose the folder that contains **manifest.json** (usually **page-notes-main**). If you only see `feedback.md` or screenshots, that is an exported review, not the extension. |
 | No Developer mode or Load unpacked option | Make sure you are on **chrome://extensions** in desktop Google Chrome. A work-managed computer may block this installation method; ask your administrator. |
 | Page Notes is missing from the toolbar | Click Chrome's puzzle-piece icon and pin Page Notes. |
 | Chrome cannot inspect this page | Try an ordinary website. Chrome settings pages, the Chrome Web Store, and some protected pages cannot be inspected. |
@@ -112,7 +122,7 @@ Do not click **Remove** to update. Removing the extension deletes its saved back
 | A note you made is missing | Open **Backlog**. Unsaved drafts are only kept while their webpage tab remains open. |
 | Saving reports a storage error | Download a ZIP backup first. Once you have checked your exports, remove older saved sessions you no longer need. |
 
-Still stuck? Send the person who shared Page Notes a screenshot of the error, your operating system (Mac or Windows), and the Page Notes version shown on **chrome://extensions**.
+Still stuck? Open an issue on [npuxdev/page-notes](https://github.com/npuxdev/page-notes) with a screenshot of the error, your operating system (Mac or Windows), and the Page Notes version shown on **chrome://extensions**.
 
 ## Privacy and preview status
 
@@ -122,10 +132,8 @@ This is **preview version 1.3.0**. Automated checks have passed, but full live-b
 
 ## Sharing this preview
 
-Send the original distribution ZIP (`page-notes-1.3.0.zip`) and tell the recipient to start with this guide or **START-HERE.html**. Do not send a feedback-export ZIP as the installer. Your feedback is stored in Chrome, not in the extension folder.
+Share the repository: [npuxdev/page-notes](https://github.com/npuxdev/page-notes). Recipients should download the ZIP from **Code** and start with this guide or **START-HERE.html**. Do not send a feedback-export ZIP as the installer. Your feedback is stored in Chrome, not in the extension folder.
 
-Project repository: [npuxdev/page-notes](https://github.com/npuxdev/page-notes).
-
-For source-code details, branding artwork, and testing notes, see **DEVELOPER.md**.
+For source-code details and testing notes, see **DEVELOPER.md**.
 
 Installation steps follow [Google's Chrome extension guide](https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world#load-unpacked).

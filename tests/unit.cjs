@@ -11,8 +11,8 @@ function worker(){let handler,onRemoved;const db={};const ctx={console,chrome:{r
 test('Concurrent backlog writes remain independent, update is idempotent, deletion is scoped',async()=>{const w=worker();await Promise.all(['a','b','c'].map(id=>w.send({type:'backlog:save',data:{id,title:id,groups:[]}})));let all=(await w.send({type:'backlog:list'})).data;assert.equal(all.length,3);await w.send({type:'backlog:save',data:{id:'b',title:'Revised',groups:[]}});all=(await w.send({type:'backlog:list'})).data;assert.equal(all.length,3);assert.equal(all.find(x=>x.id==='b').title,'Revised');await w.send({type:'backlog:delete',id:'b'});assert.equal((await w.send({type:'backlog:list'})).data.length,2);});
 test('Drafts preserve pending input and isolate tabs and URLs',async()=>{const w=worker();await w.send({type:'draft:put',url:'https://a',data:{pendingComment:'Unfinished',selected:[{id:'x'}]}},1);await w.send({type:'draft:put',url:'https://a',data:{pendingComment:'Other tab'}},2);assert.equal((await w.send({type:'draft:get',url:'https://a'},1)).data.pendingComment,'Unfinished');assert.equal((await w.send({type:'draft:get',url:'https://a'},2)).data.pendingComment,'Other tab');assert.equal((await w.send({type:'draft:get',url:'https://b'},1)).data,null);w.onRemoved(1);await w.send({type:'backlog:list'});assert.equal((await w.send({type:'draft:get',url:'https://a'},1)).data,null);assert.equal((await w.send({type:'draft:get',url:'https://a'},2)).data.pendingComment,'Other tab');});
 test('Unknown operations report errors without poisoning subsequent storage work',async()=>{const w=worker();assert.equal((await w.send({type:'bad'})).ok,false);assert.equal((await w.send({type:'backlog:list'})).ok,true);});
-test('Production manifest only requests intended permissions and packages every entry point',()=>{const m=JSON.parse(source('manifest.json'));assert.equal(m.manifest_version,3);assert.equal(m.host_permissions,undefined);assert.deepEqual(m.permissions,['activeTab','scripting','storage','clipboardWrite']);for(const file of [m.background.service_worker,m.action.default_popup,m.options_page,'core.js','lifecycle.js','content.js'])assert.ok(source(file).length);});
-test('Canonical package version is stamped across the manifest and user-facing docs',()=>{const version=JSON.parse(source('package.json')).version;assert.match(version,/^\d+\.\d+\.\d+$/);assert.equal(JSON.parse(source('manifest.json')).version,version);assert.match(source('README.md'),new RegExp(`preview version ${version}`));assert.match(source('README.md'),new RegExp(`page-notes-${version}\\.zip`));assert.match(source('START-HERE.html'),new RegExp(`Preview ${version}`));assert.match(source('START-HERE.html'),new RegExp(`preview version ${version}`));assert.match(source('START-HERE.html'),new RegExp(`page-notes-${version}\\.zip`));assert.match(source('DEVELOPER.md'),new RegExp(`Developer reference \\(${version}\\)`));});
+test('Production manifest only requests intended permissions and packages every entry point',()=>{const m=JSON.parse(source('manifest.json'));assert.equal(m.manifest_version,3);assert.equal(m.host_permissions,undefined);assert.deepEqual(m.permissions,['activeTab','scripting','storage','clipboardWrite']);const files=[m.background.service_worker,m.action.default_popup,m.options_page,'popup.js','core.js','lifecycle.js','content.js',...Object.values(m.icons),...Object.values(m.action.default_icon)];for(const file of files)assert.ok(fs.existsSync(path.join(__dirname,'..',file)),file);});
+test('Canonical package version is stamped across the manifest and user-facing docs',()=>{const version=JSON.parse(source('package.json')).version;assert.match(version,/^\d+\.\d+\.\d+$/);assert.equal(JSON.parse(source('manifest.json')).version,version);assert.match(source('README.md'),new RegExp(`preview version ${version}`));assert.match(source('START-HERE.html'),new RegExp(`Preview ${version}`));assert.match(source('START-HERE.html'),new RegExp(`preview version ${version}`));assert.match(source('DEVELOPER.md'),new RegExp(`Developer reference \\(${version}\\)`));});
 function screenshotWorker({active=true,switchTab=false}={}){
  const drawn=[];let captured=0;
  const ctx={console,Blob,Uint8Array,crypto:require('node:crypto').webcrypto,btoa,fetch:async()=>({blob:async()=>new Blob(['raw'])}),createImageBitmap:async()=>({width:2000,height:1200,close(){}}),OffscreenCanvas:class{getContext(){return{drawImage(){},strokeRect(...args){drawn.push(args)},measureText(){return{width:12}},fillRect(){},fillText(){}}}async convertToBlob(){return new Blob(['jpeg']);}},chrome:{runtime:{id:'test',onMessage:{addListener(){}}},tabs:{onRemoved:{addListener(){}},get:async()=>({id:1,active,windowId:8}),query:async()=>[{id:switchTab?2:1}],captureVisibleTab:async windowId=>{assert.equal(windowId,8);captured++;return'data:image/png;base64,eA==';}}}};
@@ -54,28 +54,58 @@ test('Evidence includes the review name and excerpt prefers the first instructio
 test('Build pipeline stamps a version and zips only shippable extension files',()=>{
  if(!fs.existsSync(path.join(__dirname,'..','scripts','lib.cjs'))) return;
  const os=require('node:os'),cp=require('node:child_process');
- const {PACKAGE_FILES,PACKAGE_DIRS,bumpVersion,checkJavaScript,copyPackage,stampVersion,zipPackage}=require('../scripts/lib.cjs');
+ const {PACKAGE_FILES,PACKAGE_DIRS,STORE_FILES,bumpVersion,checkJavaScript,copyPackage,generatePem,packCrx,stampVersion,zipPackage}=require('../scripts/lib.cjs');
  assert.equal(bumpVersion('1.3.0','patch'),'1.3.1');
  assert.equal(bumpVersion('1.3.0','minor'),'1.4.0');
  assert.equal(bumpVersion('1.3.0','major'),'2.0.0');
  assert.equal(bumpVersion('1.3.0','2.1.0'),'2.1.0');
- const root=fs.mkdtempSync(path.join(os.tmpdir(),'page-notes-build-')),packed=path.join(root,'page-notes'),zip=path.join(root,'page-notes-9.9.9.zip');
+ const root=fs.mkdtempSync(path.join(os.tmpdir(),'page-notes-build-')),packed=path.join(root,'page-notes'),store=path.join(root,'store'),zip=path.join(root,'page-notes-9.9.9.zip'),storeZip=path.join(root,'store.zip');
  try{
   fs.writeFileSync(path.join(root,'package.json'),source('package.json'));
   for(const file of PACKAGE_FILES)fs.cpSync(path.join(__dirname,'..',file),path.join(root,file));
   for(const dir of PACKAGE_DIRS)fs.cpSync(path.join(__dirname,'..',dir),path.join(root,dir),{recursive:true});
   stampVersion(root,'9.9.9');
   copyPackage(packed,root);
+  copyPackage(store,root,STORE_FILES);
   checkJavaScript(packed);
   zipPackage(packed,zip);
+  zipPackage(store,storeZip,'');
   assert.equal(JSON.parse(fs.readFileSync(path.join(packed,'manifest.json'),'utf8')).version,'9.9.9');
   assert.match(fs.readFileSync(path.join(packed,'README.md'),'utf8'),/preview version 9\.9\.9/);
-  assert.match(fs.readFileSync(path.join(packed,'README.md'),'utf8'),/page-notes-9\.9\.9\.zip/);
   assert.equal(fs.existsSync(path.join(packed,'tests')),false);
-  assert.equal(fs.existsSync(path.join(packed,'scripts')),false);
-  assert.equal(fs.existsSync(path.join(packed,'package.json')),false);
+  assert.equal(fs.existsSync(path.join(store,'DEVELOPER.md')),false);
+  assert.equal(fs.existsSync(path.join(store,'README.md')),false);
+  assert.ok(fs.existsSync(path.join(store,'START-HERE.html')));
   const listing=cp.execFileSync('python3',['-c','import zipfile,sys; z=zipfile.ZipFile(sys.argv[1]); assert z.testzip() is None; print("\\n".join(z.namelist()))',zip],{encoding:'utf8'});
   assert.match(listing,/^page-notes\/manifest\.json$/m);
   assert.doesNotMatch(listing,/page-notes\/tests\/|page-notes\/scripts\/|page-notes\/package\.json/);
+  const storeListing=cp.execFileSync('python3',['-c','import zipfile,sys; z=zipfile.ZipFile(sys.argv[1]); assert z.testzip() is None; print("\\n".join(z.namelist()))',storeZip],{encoding:'utf8'});
+  assert.match(storeListing,/^manifest\.json$/m);
+  assert.doesNotMatch(storeListing,/^page-notes\/|DEVELOPER\.md|README\.md/);
+  const pem=generatePem(),first=packCrx(fs.readFileSync(storeZip),pem),second=packCrx(fs.readFileSync(storeZip),pem);
+  assert.equal(first.crx.subarray(0,4).toString(),'Cr24');
+  assert.equal(first.crx.readUInt32LE(4),3);
+  assert.equal(first.extensionId,second.extensionId);
+  assert.match(first.extensionId,/^[a-p]{32}$/);
+  const headerLength=first.crx.readUInt32LE(8),inner=path.join(root,'inner.zip');
+  fs.writeFileSync(inner,first.crx.subarray(12+headerLength));
+  const innerListing=cp.execFileSync('python3',['-c','import zipfile,sys; z=zipfile.ZipFile(sys.argv[1]); assert z.testzip() is None; print("\\n".join(z.namelist()))',inner],{encoding:'utf8'});
+  assert.match(innerListing,/^manifest\.json$/m);
  }finally{fs.rmSync(root,{recursive:true,force:true});}
+});
+test('Preview server stamps the current version onto the sample page',async()=>{
+ if(!fs.existsSync(path.join(__dirname,'..','scripts','preview.cjs'))) return;
+ const {createPreviewServer}=require('../scripts/preview.cjs');
+ const version=JSON.parse(source('package.json')).version;
+ const server=createPreviewServer();
+ await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+ try{
+  const port=server.address().port;
+  const sample=await (await fetch('http://127.0.0.1:'+port+'/')).text();
+  assert.match(sample,new RegExp(`Page Notes ${version}`));
+  assert.doesNotMatch(sample,/__VERSION__/);
+  const preview=await (await fetch('http://127.0.0.1:'+port+'/preview')).text();
+  assert.match(preview,new RegExp(version));
+  assert.match(preview,/core\.js/);
+ }finally{await new Promise(resolve=>server.close(resolve));}
 });

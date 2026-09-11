@@ -3,29 +3,39 @@
 </style></head><body><header><img src="icons/icon-128.png" alt="Page Notes icon"><div><strong>Page Notes</strong><p>Installation &amp; everyday use · Preview 1.3.0</p></div></header><main><nav aria-label="Guide sections"><a href="#section-1">1. Get the folder ready</a><a href="#section-2">2. Add Page Notes to Chrome</a><a href="#section-3">3. Make your first note</a><a href="#section-4">4. Suggest different wording quickly</a><a href="#section-5">5. Send your feedback or keep it for later</a><a href="#section-6">6. Close or hide the panel</a><a href="#section-7">7. Install an update</a><a href="#section-8">If something doesn&#39;t work</a><a href="#section-9">Privacy and preview status</a><a href="#section-10">Sharing this preview</a></nav><article><h1>Page Notes — Start here</h1>
 <p><strong>Point at a webpage. Add feedback. Export it for your AI coding assistant.</strong></p>
 <p>Page Notes lets you select parts of a website, add comments, suggest new wording, and save annotated screenshots. It prepares feedback; it does not change the website for you.</p>
-<p>This is a directly shared preview version, installed from a folder rather than the Chrome Web Store. You do not need to write code, create an account, or pay for an API key.</p>
-<p><strong>Prefer a regular webpage-style guide? Double-click <code>START-HERE.html</code> in this folder.</strong></p>
+<p>This GitHub repository <strong>is</strong> the installable extension. Load the downloaded folder in Chrome Developer mode. You do not need the Chrome Web Store, an account, or an API key.</p>
+<p><strong>Prefer Markdown?</strong> The same steps are in <code>README.md</code>.</p>
 <h2 id="section-1">1. Get the folder ready</h2>
 <p>Use Google Chrome on a <strong>Mac or Windows computer</strong>. These instructions do not work in Chrome on a phone or tablet.</p>
 <ol>
-<li>Download the Page Notes ZIP file you received.</li>
+<li>Open <a href="https://github.com/npuxdev/page-notes">npuxdev/page-notes</a>. Click <strong>Code</strong>, then <strong>Download ZIP</strong>.</li>
 <li>Unzip it:<ul>
 <li><strong>Mac:</strong> double-click the ZIP file in Finder.</li>
 <li><strong>Windows:</strong> right-click the ZIP file, choose <strong>Extract All</strong>, then <strong>Extract</strong>.</li>
 </ul>
 </li>
-<li>Open the extracted folder and find the folder named <strong>page-notes</strong>.</li>
-<li>Move <strong>page-notes</strong> somewhere you will keep it, such as your <strong>Documents</strong> folder.</li>
-<li>Open <strong>page-notes</strong>. You should see a file named <strong>manifest.json</strong>. You do not need to open or edit that file; it tells you that you have found the right folder.</li>
+<li>You should have a folder named <strong>page-notes-main</strong> (GitHub adds <code>-main</code> to the download). Open it.</li>
+<li>Confirm you see <strong>manifest.json</strong>. Chrome needs these files in that same folder (do not move them into subfolders):<ul>
+<li><code>manifest.json</code></li>
+<li><code>background.js</code></li>
+<li><code>popup.html</code> and <code>popup.js</code></li>
+<li><code>backlog.html</code></li>
+<li><code>content.js</code>, <code>core.js</code>, and <code>lifecycle.js</code></li>
+<li><code>icons/icon-16.png</code>, <code>icon-32.png</code>, <code>icon-48.png</code>, and <code>icon-128.png</code></li>
+</ul>
+</li>
+<li>Move <strong>page-notes-main</strong> somewhere you will keep it, such as your <strong>Documents</strong> folder.</li>
 </ol>
+<p>If you use Git, <code>git clone https://github.com/npuxdev/page-notes.git</code> and install from the <strong>page-notes</strong> folder instead. It contains the same files.</p>
 <p><strong>Keep this folder in place after installing. Chrome uses it to run Page Notes.</strong> You can delete the downloaded ZIP afterward, but keep the extracted folder.</p>
+<p>If any of the files above are missing, download the ZIP again from GitHub. Do not load a feedback-export ZIP (those contain <code>feedback.md</code> and screenshots, not the extension).</p>
 <h2 id="section-2">2. Add Page Notes to Chrome</h2>
 <ol>
 <li>Open Google Chrome.</li>
 <li>Click the address bar at the top, type <strong>chrome://extensions</strong>, and press <strong>Enter</strong>. Type it into the address bar, not a search box on a webpage.</li>
 <li>Turn on <strong>Developer mode</strong> in the upper-right corner. This is simply the setting Chrome uses to load an extension from a folder.</li>
 <li>Click <strong>Load unpacked</strong>, near the upper-left corner.</li>
-<li>Find and select the <strong>page-notes</strong> folder you placed in Documents. Choose <strong>Select Folder</strong> or <strong>Open</strong>, depending on your computer. Select the folder containing <strong>manifest.json</strong>, not the ZIP file or its outer folder.</li>
+<li>Find and select the folder you placed in Documents (<strong>page-notes-main</strong> from the GitHub ZIP, or <strong>page-notes</strong> if you cloned). Choose <strong>Select Folder</strong> or <strong>Open</strong>, depending on your computer. Select the folder that contains <strong>manifest.json</strong>, not the ZIP file.</li>
 <li>A card named <strong>Page Notes — Feedback for Agents</strong> should appear. Make sure its on/off switch is on.</li>
 <li>Click the <strong>puzzle-piece icon</strong> beside Chrome&#39;s address bar. Find <strong>Page Notes</strong> and click its <strong>pin</strong> so the mint page-and-cursor icon stays in your toolbar.</li>
 </ol>
@@ -69,12 +79,12 @@
 <li><strong>Esc</strong> cancels an open note, then finishes pointing, then closes the panel.</li>
 </ul>
 <h2 id="section-7">7. Install an update</h2>
-<p>Updates are manual for this directly shared version.</p>
+<p>Updates are manual for this preview.</p>
 <ol>
 <li>In the current version, save or export feedback you want to keep.</li>
-<li>Download and unzip the new ZIP into a temporary location, such as Downloads.</li>
-<li>Open the new <strong>page-notes</strong> folder. Copy everything <strong>inside</strong> it.</li>
-<li>Open the <strong>existing page-notes folder you originally installed</strong>, such as Documents/page-notes. Paste the copied files there and choose <strong>Replace</strong> when asked. Keep the existing folder in the same place. Do not put the new page-notes folder inside the old one.</li>
+<li>Download a fresh ZIP from GitHub (<strong>Code</strong> → <strong>Download ZIP</strong>) and unzip it into a temporary location, such as Downloads.</li>
+<li>Open the new folder (<strong>page-notes-main</strong>). Copy everything <strong>inside</strong> it.</li>
+<li>Open the <strong>existing folder you originally installed</strong>, such as Documents/page-notes-main. Paste the copied files there and choose <strong>Replace</strong> when asked. Keep the existing folder in the same place. Do not put the new folder inside the old one.</li>
 <li>In Chrome, go to <strong>chrome://extensions</strong>.</li>
 <li>Find the Page Notes card and click its <strong>Reload</strong> button (a circular arrow).</li>
 <li>Refresh every webpage where you had Page Notes open. This clears the old version&#39;s controls.</li>
@@ -90,7 +100,7 @@
 </thead>
 <tbody><tr>
 <td>“Manifest file is missing” or the folder will not load</td>
-<td>Unzip the download first. Choose the folder that contains <strong>manifest.json</strong>. You may need to open one more folder.</td>
+<td>Unzip the GitHub download first. Choose the folder that contains <strong>manifest.json</strong> (usually <strong>page-notes-main</strong>). If you only see <code>feedback.md</code> or screenshots, that is an exported review, not the extension.</td>
 </tr>
 <tr>
 <td>No Developer mode or Load unpacked option</td>
@@ -129,13 +139,12 @@
 <td>Download a ZIP backup first. Once you have checked your exports, remove older saved sessions you no longer need.</td>
 </tr>
 </tbody></table>
-<p>Still stuck? Send the person who shared Page Notes a screenshot of the error, your operating system (Mac or Windows), and the Page Notes version shown on <strong>chrome://extensions</strong>.</p>
+<p>Still stuck? Open an issue on <a href="https://github.com/npuxdev/page-notes">npuxdev/page-notes</a> with a screenshot of the error, your operating system (Mac or Windows), and the Page Notes version shown on <strong>chrome://extensions</strong>.</p>
 <h2 id="section-9">Privacy and preview status</h2>
 <p>Page Notes stores feedback locally and does not send it to an AI service. You choose what to export and share. Screenshots include everything visible on the page; check them before sharing private information. Uninstalling Page Notes removes its local backlog, so export anything important first.</p>
 <p>This is <strong>preview version 1.3.0</strong>. Automated checks have passed, but full live-browser and visual testing remains pending. Report anything that behaves unexpectedly. Some embedded page sections and protected content cannot be inspected.</p>
 <h2 id="section-10">Sharing this preview</h2>
-<p>Send the original distribution ZIP (<strong>page-notes-1.3.0.zip</strong>) and tell the recipient to start with this guide or <strong>START-HERE.html</strong>. Do not send a feedback-export ZIP as the installer. Your feedback is stored in Chrome, not in the extension folder.</p>
-<p>Project repository: <a href="https://github.com/npuxdev/page-notes">npuxdev/page-notes</a>.</p>
-<p>For source-code details, branding artwork, and testing notes, see <strong>DEVELOPER.md</strong>.</p>
+<p>Share the repository: <a href="https://github.com/npuxdev/page-notes">npuxdev/page-notes</a>. Recipients should download the ZIP from <strong>Code</strong> and start with this guide or <strong>README.md</strong>. Do not send a feedback-export ZIP as the installer. Your feedback is stored in Chrome, not in the extension folder.</p>
+<p>For source-code details and testing notes, see <strong>DEVELOPER.md</strong>.</p>
 <p>Installation steps follow <a href="https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world#load-unpacked">Google&#39;s Chrome extension guide</a>.</p>
 </article></main><footer>Need this guide on paper? Use your browser’s Print command.</footer></body></html>

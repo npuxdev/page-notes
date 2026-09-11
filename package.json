@@ -6,6 +6,8 @@
   "scripts": {
     "test": "node --test tests/unit.cjs",
     "build": "node scripts/build.cjs",
+    "preview": "node scripts/preview.cjs",
+    "start": "node scripts/preview.cjs",
     "version:stamp": "node scripts/version.cjs --stamp",
     "version:patch": "node scripts/version.cjs patch",
     "version:minor": "node scripts/version.cjs minor",
