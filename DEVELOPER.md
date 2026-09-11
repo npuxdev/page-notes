@@ -1,35 +1,49 @@
 For installation and everyday use, see [README.md](README.md) or open START-HERE.html.
 
-# Page Notes — Developer reference (1.2.1)
+# Page Notes — Developer reference (1.3.0)
 
 A dependency-free Chrome Manifest V3 extension for turning visual page feedback into actionable Markdown for coding agents.
 
 ## Install
 
-1. Extract the ZIP into a permanent folder.
-2. Open `chrome://extensions` in desktop Chrome.
-3. Enable **Developer mode**.
-4. Choose **Load unpacked** and select the `page-notes` folder containing `manifest.json`.
-5. Pin **Page Notes** from the toolbar's Extensions menu.
+End-user installation is in [README.md](README.md). Developers can load the repository root unpacked, or build first and load `dist/page-notes`.
 
-No build step, account, API key, or server is required.
+No account, API key, or server is required. The runtime extension has no npm dependencies; Node is used only for tests, version stamping, and the distributable build.
+
+## Versioning and build
+
+`package.json` is the canonical version. `node scripts/build.cjs` stamps that version into `manifest.json` and the docs, then writes a loadable package to `dist/page-notes` and a shareable `dist/page-notes-<version>.zip`. The zip root is a `page-notes` folder, matching the README install steps.
+
+```
+node --test tests/unit.cjs
+node scripts/build.cjs
+```
+
+Bump and restamp without building:
+
+```
+node scripts/version.cjs patch    # also minor, major, or 1.4.0
+node scripts/version.cjs --stamp  # rewrite versioned files from package.json
+```
+
+`npm test`, `npm run build`, and `npm run version:patch` are aliases. CI runs the unit tests, builds the zip, and uploads it as an artifact. `dist/` is generated and gitignored. Load unpacked from `dist/page-notes` when testing the package that will be shared.
 
 ## Workflow
 
-1. Open a website, click the extension, then **Inspect this page**.
-2. Choose **Select elements**. Hover to highlight; click to select. Continue clicking to create a multi-element group. Click a selected element again to remove it.
-3. Choose **Finish selecting** or press Escape. Add a group instruction and optional individual element comments.
-4. Choose **Add group to queue**. The extension captures the current viewport with numbered element outlines while hiding its panel. Repeat for additional groups. Each group can be edited, located, or removed.
-5. Choose **Export feedback**, then **Download ZIP** for `feedback.md`, `evidence.json`, and annotated JPEG images. **Copy Markdown** and **MD only** keep the readable text and image references; attach the ZIP separately to provide the images and full selectors.
-6. Alternatively, choose **Save to backlog**. Open saved sessions from the panel's Backlog tab or the extension popup. Saving an opened session updates it; **New session** creates a separate entry.
+1. Open a website, click the extension, then **Point at this page**. Pointing starts automatically.
+2. Hover to highlight (visible text, not the tag). **Alt-scroll** walks the DOM parent/child chain. Click to pin. Continue clicking to create a multi-element group. Click a selected element again to remove it. Drag a rectangle to mark empty space.
+3. Write the instruction in the on-page composer. Optional per-element notes stay behind **Element note**. **Add note** or Ctrl/⌘+Enter queues the group and captures the viewport.
+4. Repeat. Queued copy edits ghost the proposed text over the original. The dock is a map: rename the review, edit, locate, retry screenshots, or remove from **More**.
+5. **Copy for Cursor** copies Markdown and downloads the packet ZIP when screenshots exist. **Review packet** opens Copy for Cursor, Download packet, and Markdown-only under More formats.
+6. Groups auto-save to the local backlog under the review name. **Save review** writes immediately. **New review** starts a separate entry.
 
-Use **−** to temporarily minimize while selecting behind the panel; **Resume notes** reopens it. **×** closes Page Notes completely, removing all controls and highlights while preserving the draft. Reopen from the extension toolbar. Switching away from the inspected tab also disengages Page Notes; returning to the tab does not reactivate it. Escape finishes selection first; a second Escape closes the panel. Page interactions resume whenever selection ends. The standalone backlog manager remains open across tab switches.
+The panel minimizes while you write on the page; **Resume notes** reopens the map. Close removes all controls and highlights while preserving the draft. Reopen from the extension toolbar. Switching away from the inspected tab also disengages Page Notes; returning to the tab does not reactivate it. Escape cancels an open on-page note first, then finishes pointing, then closes. The standalone backlog manager remains open across tab switches.
 
 When upgrading, replace the files in the existing extension directory, reload the extension at `chrome://extensions`, then refresh **all previously inspected webpage tabs** once to remove content scripts injected by the old version. Future sessions include context-invalidation cleanup and tab-local lifecycle handling.
 
 ## Quick inline copy edits
 
-While **Select elements** is active, double-click a heading, paragraph, link, or button label. A text editor appears over the element with its current copy selected. Type the replacement, then choose **Add copy edit** or press **Ctrl/⌘ + Enter**. A separate copy-only group is queued with the same captured element ID, XPath, CSS selector, coordinates, and a screenshot of the original page. Existing multi-selections are preserved.
+While pointing is active, double-click a heading, paragraph, link, or button label. A text editor appears over the element with its current copy selected. Type the replacement, then choose **Add copy edit** or press **Ctrl/⌘ + Enter**. A separate copy-only group is queued with the same captured element ID, XPath, CSS selector, coordinates, and a screenshot of the original page. Existing multi-selections are preserved.
 
 The editor is an overlay; it does not modify the website's DOM or submit anything. Escape or Cancel discards uncommitted text. Leaving the tab or closing Page Notes also cancels the inline editor; queue the edit before leaving. Queued copy edits persist like other groups and can be revised with the group's Edit action and Replacement copy field.
 
@@ -37,7 +51,7 @@ Markdown includes exactly `Replace Copy with 'your replacement text'` for each c
 
 ## Compact interface
 
-The panel is 370px wide with reduced header and card spacing. Group comments appear when elements are selected. Optional element notes and screenshot previews are collapsible. Long locators are available as hover titles instead of filling selection cards. Export opens a focused view with Copy MD, Download ZIP, MD only, and an optional Markdown preview; Back to queue returns to editing.
+The panel is 370px wide. Capture happens on the page: an anchored composer, numbered pins, and copy ghosts. The dock is a map of notes with a review name, screenshot thumbs, and a Retry state when capture failed. **Copy for Cursor** is the primary handoff; Review packet holds the Markdown preview, packet ZIP, and Markdown-only overflow.
 
 ## Screenshots and compact feedback
 
@@ -78,13 +92,15 @@ API references: https://developer.chrome.com/docs/extensions/reference/api/scrip
 - Desktop Chrome only. Chrome internal pages, the Chrome Web Store, and other browser-protected documents cannot be inspected. Local file pages require enabling “Allow access to file URLs” in extension details.
 - This version selects elements in the top document and open Shadow DOM. It can select an iframe element, but not elements inside the iframe. Closed shadow roots and canvas internals cannot be inspected.
 - XPath/CSS locators describe the DOM at capture time; regenerated IDs or changed structure may invalidate them. “Locate” is a best-effort convenience; agents should verify targets before editing.
-- No full-page screenshot stitching, DOM editing, drag rectangles, cloud backlog, or automatic code changes are included. Multi-selection is click-to-toggle and requires no modifier key.
+- No full-page screenshot stitching, DOM editing, cloud backlog, or automatic code changes are included. Multi-selection is click-to-toggle and requires no modifier key. Empty-space notes are drag-rectangles stored as bounds, not fake selectors.
 - Captured bounds remain a historical snapshot. Visible highlights follow scrolling and viewport resize; continuous page animation may outpace highlights.
 - The panel is visually isolated with Shadow DOM but shares the page DOM. A hostile page can still remove or obscure it. Unusually aggressive site event handlers may interfere with capture.
 - Storage quota failures and clipboard failures are surfaced in the panel. For clipboard restrictions, use Download or manually copy the preview.
 
 ## Files and development
 
+- `package.json`: canonical version and npm script aliases.
+- `scripts/build.cjs` / `scripts/version.cjs`: distributable package and version stamps.
 - `manifest.json`: permissions and extension entry points.
 - `background.js`: serialized draft/backlog storage operations.
 - `popup.html` / `popup.js`: activation and backlog launcher.
@@ -92,12 +108,13 @@ API references: https://developer.chrome.com/docs/extensions/reference/api/scrip
 - `core.js`: locators, capture schema, and Markdown serialization.
 - `lifecycle.js`: tab-local open/minimize/close/selection state.
 - `backlog.html`: full-page backlog manager.
+- `branding/`: announcement artwork; omitted from `dist/`.
 - `tests/smoke.cjs`: browser integration test.
 
-To run the test, install Playwright in your development environment and its Chromium browser, then run `node tests/smoke.cjs` with Playwright available to Node. It uses a disposable copy with all-URLs test host permission for screenshot capture to simulate the user's toolbar access grant; the shipped manifest retains activeTab-only access.
+To run the browser smoke test, install Playwright in your development environment and its Chromium browser, then run `node tests/smoke.cjs` with Playwright available to Node. It copies the same shippable files as the dist package and grants the disposable copy all-URLs host permission for screenshot capture to simulate the user's toolbar access grant; the shipped manifest retains activeTab-only access.
 
 ## Validation in this delivery
 
-JavaScript syntax checks and all 15 Node tests passed (`node --test tests/unit.cjs`). Tests cover compact Markdown, full JSON evidence, ZIP extraction/checksums using Python, concurrent backlog updates, draft isolation and cleanup, storage error recovery, manifest entry points, screenshot coordinate scaling, capture throttling, inactive/switched-tab protection, close/minimize behavior, independent tab state, Escape behavior, repeated activation, copy-edit identifier preservation, exact instruction export, and empty/multiline/literal replacement text. Chrome storage and screenshot/canvas APIs are mocked in these Node tests; image rendering is not visually verified by them.
+JavaScript syntax checks and Node tests (`node --test tests/unit.cjs`) cover compact Markdown, full JSON evidence, ZIP extraction/checksums using Python, concurrent backlog updates, draft isolation and cleanup, storage error recovery, manifest entry points, screenshot coordinate scaling, capture throttling, inactive/switched-tab protection, close/minimize behavior, independent tab state, Escape behavior, repeated activation, copy-edit identifier preservation, exact instruction export, empty/multiline/literal replacement text, version stamps, and the dist package contents. Chrome storage and screenshot/canvas APIs are mocked in these Node tests; image rendering is not visually verified by them.
 
 Full browser integration and visual verification remain pending: the available browser security policy blocks the local test fixture. Lifecycle regressions were verified against the production state module in Node, not through live tab interaction. `tests/smoke.cjs` is provided for local execution. `tests/preview.html` is a development-only UI fixture with mock storage; it deliberately reports screenshot capture unavailable outside the installed extension.

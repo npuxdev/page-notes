@@ -32,56 +32,54 @@ Use Google Chrome on a **Mac or Windows computer**. These instructions do not wo
 6. A card named **Page Notes — Feedback for Agents** should appear. Make sure its on/off switch is on.
 7. Click the **puzzle-piece icon** beside Chrome's address bar. Find **Page Notes** and click its **pin** so the mint page-and-cursor icon stays in your toolbar.
 
-**You're installed.** Open an ordinary website, click the Page Notes icon, then choose **Inspect this page**.
+**You're installed.** Open an ordinary website, click the Page Notes icon, then choose **Point at this page**.
 
 ## 3. Make your first note
 
-1. On the website, open Page Notes and click **Select elements**.
-2. Move your mouse over the page to see the highlight. Click the text, button, or other item you want to comment on.
-3. You can click several items to discuss them together. Click an item again to deselect it.
-4. Click **Done selecting**, or press **Esc**.
-5. Enter your request under **Group instruction**. For example: “Make these two buttons the same width.”
-6. Click **Add group**. Page Notes adds your feedback to the queue and tries to take an annotated screenshot.
-7. Repeat for any additional feedback.
+1. On the website, open Page Notes. Pointing is already on.
+2. Move your mouse over the page. The highlight uses the visible text, not the HTML tag. Hold **Alt** and scroll to move the target up or down the page structure if the wrong item is highlighted.
+3. Click the text, button, or other item you want to comment on. A note field appears on the page. Click additional items to discuss them together; click again to deselect.
+4. Type what should change. For example: “Make these two buttons the same width.” Press **Command + Enter** on Mac / **Ctrl + Enter** on Windows, or click **Add note**.
+5. Repeat for any additional feedback. Drag on empty space to mark where something is missing.
 
-Click **Element note** to add a comment about one particular item. Expand a group's screenshot section to review its images. To capture another part of a long page, scroll there and click **Add screenshot** on that group.
+Name the review at the top of the panel if you want something clearer than the page title. Notes are saved to this Chrome profile as you add them.
+
+Click **Element note** on a pin to comment about one particular item. If a screenshot is missing, use **Retry screenshot** on that note. To capture another part of a long page, scroll there and click **Add screenshot**.
 
 Keep the webpage still and active while a screenshot is being taken. A screenshot covers the visible part of the page, not the entire page.
 
 ## 4. Suggest different wording quickly
 
-1. Click **Select elements**.
-2. **Double-click** a heading, paragraph, link, or button label.
-3. Type your replacement text into the editor that appears over it.
-4. Click **Add copy edit**, or press **Command + Enter** on Mac / **Ctrl + Enter** on Windows.
+1. With pointing on, **double-click** a heading, paragraph, link, or button label.
+2. Type your replacement text into the editor that appears over it.
+3. Click **Add copy edit**, or press **Command + Enter** on Mac / **Ctrl + Enter** on Windows.
 
-The edit is queued with an instruction such as **Replace Copy with 'Start your free trial'**. The actual website remains unchanged.
+The edit is queued with an instruction such as **Replace Copy with 'Start your free trial'**. The actual website remains unchanged. The proposed copy is shown as a ghost on the original text so you can review it.
 
 **Cancel** or **Esc** discards text that has not been queued. Switching tabs also cancels an open copy editor, so add the copy edit before leaving the tab.
 
-## 5. Export your feedback or save it for later
+## 5. Send your feedback or keep it for later
 
 ### Send it to an AI coding assistant
 
-1. Finish adding your groups.
-2. Click **Export feedback**.
-3. Choose **Download ZIP**. This is the most complete option: it includes your instructions, screenshots, and technical references that help the assistant find the right elements.
-4. Give that ZIP to your developer or AI coding assistant. If your assistant does not accept ZIP files, unzip it and provide **feedback.md**, **evidence.json**, and the **screenshots** folder together.
+1. Finish adding your notes.
+2. Click **Copy for Cursor**. This copies the written instructions. If there are screenshots, Page Notes also downloads a packet ZIP.
+3. Paste into your assistant. Attach the ZIP (or its `feedback.md`, `evidence.json`, and `screenshots` folder) when the assistant needs images and locators.
 
-**Copy MD** copies only the written instructions and file references; it does not copy the images. **MD only** downloads that same text as a file. Use **Preview Markdown** if you want to read it first. Markdown is simply a text format with headings and lists.
+**Review packet** opens a preview. **Download packet** is the complete ZIP. **Markdown only** is under More formats and does not include images.
 
 ### Keep it on this computer
 
-Click **Save backlog**. Later, click the toolbar icon and choose **Open saved backlog**, then **Open session** on the item you want.
+Notes are saved to the backlog as you add them. Click the toolbar icon and choose **Open saved backlog**, then **Open session** on the review you want. You can also click **Save review**.
 
-Saving an opened session updates that saved item. **New session** starts a separate one. If asked to replace a queue, save or export anything you want to keep first.
+Saving an opened review updates that saved item. **New review** starts a separate one. If asked to replace a queue, export anything extra you want to keep first.
 
-Saved backlog items stay in this Chrome profile. They do not sync to another computer. Closing Page Notes keeps your working draft, but **closing the webpage tab deletes its unsaved draft**. Use Save backlog before closing a tab or quitting Chrome.
+Saved reviews stay in this Chrome profile. They do not sync to another computer. Closing Page Notes keeps your working draft, but **closing the webpage tab deletes its unsaved draft**. Named reviews in the backlog survive quitting Chrome.
 
 ## 6. Close or hide the panel
 
-- **−** temporarily minimizes it so you can reach content underneath. Click **Resume notes** to reopen it.
-- **×** closes Page Notes and removes its controls from the page. Reopen it from Chrome's toolbar.
+- The panel hides while you write on the page. Click **Resume notes** to reopen the map of notes, send to your agent, or rename the review.
+- The close button removes Page Notes from the page. Reopen it from Chrome's toolbar.
 - Switching to another tab disengages inspection. When you return, click the toolbar icon to resume.
 - **Esc** finishes selection; pressing it again closes the panel.
 
@@ -120,14 +118,14 @@ Still stuck? Send the person who shared Page Notes a screenshot of the error, yo
 
 Page Notes stores feedback locally and does not send it to an AI service. You choose what to export and share. Screenshots include everything visible on the page; check them before sharing private information. Uninstalling Page Notes removes its local backlog, so export anything important first.
 
-This is **preview version 1.2.1**. Automated checks have passed, but full live-browser and visual testing remains pending. Report anything that behaves unexpectedly. Some embedded page sections and protected content cannot be inspected.
+This is **preview version 1.3.0**. Automated checks have passed, but full live-browser and visual testing remains pending. Report anything that behaves unexpectedly. Some embedded page sections and protected content cannot be inspected.
 
 ## Sharing this preview
 
-Send the original distribution ZIP and tell the recipient to start with this guide or **START-HERE.html**. Do not send a feedback-export ZIP as the installer. Your feedback is stored in Chrome, not in the extension folder. The **branding** folder contains the announcement banner and full-size icon.
+Send the original distribution ZIP (`page-notes-1.3.0.zip`) and tell the recipient to start with this guide or **START-HERE.html**. Do not send a feedback-export ZIP as the installer. Your feedback is stored in Chrome, not in the extension folder.
 
 Project repository: [npuxdev/page-notes](https://github.com/npuxdev/page-notes).
 
-For source-code details and testing notes, see **DEVELOPER.md**.
+For source-code details, branding artwork, and testing notes, see **DEVELOPER.md**.
 
 Installation steps follow [Google's Chrome extension guide](https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world#load-unpacked).

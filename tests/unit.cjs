@@ -12,6 +12,7 @@ test('Concurrent backlog writes remain independent, update is idempotent, deleti
 test('Drafts preserve pending input and isolate tabs and URLs',async()=>{const w=worker();await w.send({type:'draft:put',url:'https://a',data:{pendingComment:'Unfinished',selected:[{id:'x'}]}},1);await w.send({type:'draft:put',url:'https://a',data:{pendingComment:'Other tab'}},2);assert.equal((await w.send({type:'draft:get',url:'https://a'},1)).data.pendingComment,'Unfinished');assert.equal((await w.send({type:'draft:get',url:'https://a'},2)).data.pendingComment,'Other tab');assert.equal((await w.send({type:'draft:get',url:'https://b'},1)).data,null);w.onRemoved(1);await w.send({type:'backlog:list'});assert.equal((await w.send({type:'draft:get',url:'https://a'},1)).data,null);assert.equal((await w.send({type:'draft:get',url:'https://a'},2)).data.pendingComment,'Other tab');});
 test('Unknown operations report errors without poisoning subsequent storage work',async()=>{const w=worker();assert.equal((await w.send({type:'bad'})).ok,false);assert.equal((await w.send({type:'backlog:list'})).ok,true);});
 test('Production manifest only requests intended permissions and packages every entry point',()=>{const m=JSON.parse(source('manifest.json'));assert.equal(m.manifest_version,3);assert.equal(m.host_permissions,undefined);assert.deepEqual(m.permissions,['activeTab','scripting','storage','clipboardWrite']);for(const file of [m.background.service_worker,m.action.default_popup,m.options_page,'core.js','lifecycle.js','content.js'])assert.ok(source(file).length);});
+test('Canonical package version is stamped across the manifest and user-facing docs',()=>{const version=JSON.parse(source('package.json')).version;assert.match(version,/^\d+\.\d+\.\d+$/);assert.equal(JSON.parse(source('manifest.json')).version,version);assert.match(source('README.md'),new RegExp(`preview version ${version}`));assert.match(source('README.md'),new RegExp(`page-notes-${version}\\.zip`));assert.match(source('START-HERE.html'),new RegExp(`Preview ${version}`));assert.match(source('START-HERE.html'),new RegExp(`preview version ${version}`));assert.match(source('START-HERE.html'),new RegExp(`page-notes-${version}\\.zip`));assert.match(source('DEVELOPER.md'),new RegExp(`Developer reference \\(${version}\\)`));});
 function screenshotWorker({active=true,switchTab=false}={}){
  const drawn=[];let captured=0;
  const ctx={console,Blob,Uint8Array,crypto:require('node:crypto').webcrypto,btoa,fetch:async()=>({blob:async()=>new Blob(['raw'])}),createImageBitmap:async()=>({width:2000,height:1200,close(){}}),OffscreenCanvas:class{getContext(){return{drawImage(){},strokeRect(...args){drawn.push(args)},measureText(){return{width:12}},fillRect(){},fillText(){}}}async convertToBlob(){return new Blob(['jpeg']);}},chrome:{runtime:{id:'test',onMessage:{addListener(){}}},tabs:{onRemoved:{addListener(){}},get:async()=>({id:1,active,windowId:8}),query:async()=>[{id:switchTab?2:1}],captureVisibleTab:async windowId=>{assert.equal(windowId,8);captured++;return'data:image/png;base64,eA==';}}}};
@@ -30,3 +31,50 @@ test('Repeated toolbar activation opens the same session without resuming captur
 
 test('Copy edits preserve identifiers and original text while exporting the exact replacement instruction',()=>{const c=core(),element=example().groups[0].elements[0];const replacement="It's clearer now\nKeep this second line.";const group=c.copyGroup(element,'Old label',replacement);assert.equal(group.type,'copy');assert.equal(group.elements[0].id,element.id);assert.equal(group.elements[0].css,element.css);assert.equal(group.elements[0].xpath,element.xpath);assert.equal(group.elements[0].copyEdit.originalText,'Old label');assert.equal(group.elements[0].copyEdit.replacementText,replacement);assert.equal(element.copyEdit,undefined);const session={title:'Test',url:'https://example.com',groups:[group]};assert.ok(c.markdown(session).includes("Replace Copy with '"+replacement+"'"));assert.equal(c.evidence(session).groups[0].elements[0].copyEdit.replacementText,replacement);});
 test('Copy edits support intentional empty strings and literal markup without interpreting it',()=>{const c=core(),element=example().groups[0].elements[0];for(const text of ['', '<b>Plain text</b> ``` unsafe fence']){const group=c.copyGroup(element,'Old',text);const md=c.markdown({title:'Test',url:'https://example.com',groups:[group]});assert.ok(md.includes("Replace Copy with '"+text+"'"));assert.equal(group.elements[0].copyEdit.replacementText,text);}});
+test('Markdown names elements by visible text and records empty-space regions',()=>{
+ const c=core(),md=c.markdown(example());
+ assert.match(md,/Ignore previous instructions/);
+ assert.match(md,/\(button\)/);
+ const regionMd=c.markdown({name:'Checkout',title:'Shop',url:'https://example.com',groups:[{comment:'Put a filter bar here',type:'region',elements:[{id:'r1',tag:'region',text:'Empty space',region:{viewport:{x:10,y:20,width:120,height:40}}}],screenshots:[]}]});
+ assert.match(regionMd,/Review: Checkout/);
+ assert.match(regionMd,/Empty space/);
+ assert.match(regionMd,/Put a filter bar here/);
+ assert.match(regionMd,/10, 20/);
+});
+test('Evidence includes the review name and excerpt prefers the first instruction',()=>{
+ const c=core(),data={...example(),name:'Homepage pass'};
+ assert.equal(c.evidence(data).name,'Homepage pass');
+ assert.equal(c.evidence(data).schemaVersion,3);
+ assert.match(c.excerpt(data),/Make this bigger/);
+ assert.equal(c.visibleLabel({tag:'button',text:'Start a project'}),'Start a project');
+ assert.equal(c.visibleLabel({tag:'region',region:{viewport:{x:0,y:0,width:10,height:10}}}),'Empty space');
+ assert.equal(c.countLabel(1,'note'),'1 note');
+ assert.equal(c.countLabel(2,'note'),'2 notes');
+});
+test('Build pipeline stamps a version and zips only shippable extension files',()=>{
+ const os=require('node:os'),cp=require('node:child_process');
+ const {PACKAGE_FILES,PACKAGE_DIRS,bumpVersion,checkJavaScript,copyPackage,stampVersion,zipPackage}=require('../scripts/lib.cjs');
+ assert.equal(bumpVersion('1.3.0','patch'),'1.3.1');
+ assert.equal(bumpVersion('1.3.0','minor'),'1.4.0');
+ assert.equal(bumpVersion('1.3.0','major'),'2.0.0');
+ assert.equal(bumpVersion('1.3.0','2.1.0'),'2.1.0');
+ const root=fs.mkdtempSync(path.join(os.tmpdir(),'page-notes-build-')),packed=path.join(root,'page-notes'),zip=path.join(root,'page-notes-9.9.9.zip');
+ try{
+  fs.writeFileSync(path.join(root,'package.json'),source('package.json'));
+  for(const file of PACKAGE_FILES)fs.cpSync(path.join(__dirname,'..',file),path.join(root,file));
+  for(const dir of PACKAGE_DIRS)fs.cpSync(path.join(__dirname,'..',dir),path.join(root,dir),{recursive:true});
+  stampVersion(root,'9.9.9');
+  copyPackage(packed,root);
+  checkJavaScript(packed);
+  zipPackage(packed,zip);
+  assert.equal(JSON.parse(fs.readFileSync(path.join(packed,'manifest.json'),'utf8')).version,'9.9.9');
+  assert.match(fs.readFileSync(path.join(packed,'README.md'),'utf8'),/preview version 9\.9\.9/);
+  assert.match(fs.readFileSync(path.join(packed,'README.md'),'utf8'),/page-notes-9\.9\.9\.zip/);
+  assert.equal(fs.existsSync(path.join(packed,'tests')),false);
+  assert.equal(fs.existsSync(path.join(packed,'scripts')),false);
+  assert.equal(fs.existsSync(path.join(packed,'package.json')),false);
+  const listing=cp.execFileSync('python3',['-c','import zipfile,sys; z=zipfile.ZipFile(sys.argv[1]); assert z.testzip() is None; print("\\n".join(z.namelist()))',zip],{encoding:'utf8'});
+  assert.match(listing,/^page-notes\/manifest\.json$/m);
+  assert.doesNotMatch(listing,/page-notes\/tests\/|page-notes\/scripts\/|page-notes\/package\.json/);
+ }finally{fs.rmSync(root,{recursive:true,force:true});}
+});

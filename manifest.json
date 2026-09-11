@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Page Notes \u2014 Feedback for Agents",
-  "version": "1.2.1",
-  "description": "Select page elements, group feedback, export agent-ready Markdown, and keep a local backlog.",
+  "version": "1.3.0",
+  "description": "Point at a page, leave notes on the glass, and send an agent-ready packet.",
   "minimum_chrome_version": "114",
   "permissions": [
     "activeTab",

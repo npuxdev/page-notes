@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Page Notes — Installation & Help</title><link rel="icon" href="icons/icon-32.png"><style>
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#f5f5ef;color:#172a34;font:16px/1.65 system-ui,sans-serif}header{background:#12212d;color:white;padding:28px max(24px,calc((100vw - 1000px)/2));display:flex;align-items:center;gap:18px}header img{width:64px;height:64px}header strong{font-size:27px}header p{margin:0;color:#a9e6cd;font-size:14px}main{max-width:1000px;margin:auto;padding:24px}nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px}nav a{background:#e4eee8;border:1px solid #c6d9ce;border-radius:7px;padding:6px 10px;font-size:13px;text-decoration:none}article{background:white;border:1px solid #dfe5de;border-radius:16px;padding:clamp(20px,5vw,48px)}h1{font-size:30px;line-height:1.2}h2{margin-top:42px;padding-top:18px;border-top:1px solid #e3e8e2;font-size:23px;scroll-margin-top:20px}h3{font-size:18px}a{color:#176749}code{background:#edf1ec;padding:2px 5px;border-radius:4px;font-size:.9em}li{margin:8px 0}table{border-collapse:collapse;width:100%;font-size:14px}th,td{text-align:left;vertical-align:top;border:1px solid #dce4dd;padding:12px}th{background:#edf3ee}footer{text-align:center;padding:25px;font-size:13px;color:#52655c}@media(max-width:600px){main{padding:12px}article{padding:18px}h1{font-size:25px}table{font-size:12px}th,td{padding:7px}}@media print{nav,header,footer{display:none}body{background:white}article{border:0;padding:0}h2{break-after:avoid}tr{break-inside:avoid}}
-</style></head><body><header><img src="icons/icon-128.png" alt="Page Notes icon"><div><strong>Page Notes</strong><p>Installation &amp; everyday use · Preview 1.2.1</p></div></header><main><nav aria-label="Guide sections"><a href="#section-1">1. Get the folder ready</a><a href="#section-2">2. Add Page Notes to Chrome</a><a href="#section-3">3. Make your first note</a><a href="#section-4">4. Suggest different wording quickly</a><a href="#section-5">5. Export your feedback or save it for later</a><a href="#section-6">6. Close or hide the panel</a><a href="#section-7">7. Install an update</a><a href="#section-8">If something doesn&#39;t work</a><a href="#section-9">Privacy and preview status</a><a href="#section-10">Sharing this preview</a></nav><article><h1>Page Notes — Start here</h1>
+</style></head><body><header><img src="icons/icon-128.png" alt="Page Notes icon"><div><strong>Page Notes</strong><p>Installation &amp; everyday use · Preview 1.3.0</p></div></header><main><nav aria-label="Guide sections"><a href="#section-1">1. Get the folder ready</a><a href="#section-2">2. Add Page Notes to Chrome</a><a href="#section-3">3. Make your first note</a><a href="#section-4">4. Suggest different wording quickly</a><a href="#section-5">5. Send your feedback or keep it for later</a><a href="#section-6">6. Close or hide the panel</a><a href="#section-7">7. Install an update</a><a href="#section-8">If something doesn&#39;t work</a><a href="#section-9">Privacy and preview status</a><a href="#section-10">Sharing this preview</a></nav><article><h1>Page Notes — Start here</h1>
 <p><strong>Point at a webpage. Add feedback. Export it for your AI coding assistant.</strong></p>
 <p>Page Notes lets you select parts of a website, add comments, suggest new wording, and save annotated screenshots. It prepares feedback; it does not change the website for you.</p>
 <p>This is a directly shared preview version, installed from a folder rather than the Chrome Web Store. You do not need to write code, create an account, or pay for an API key.</p>
@@ -29,47 +29,44 @@
 <li>A card named <strong>Page Notes — Feedback for Agents</strong> should appear. Make sure its on/off switch is on.</li>
 <li>Click the <strong>puzzle-piece icon</strong> beside Chrome&#39;s address bar. Find <strong>Page Notes</strong> and click its <strong>pin</strong> so the mint page-and-cursor icon stays in your toolbar.</li>
 </ol>
-<p><strong>You&#39;re installed.</strong> Open an ordinary website, click the Page Notes icon, then choose <strong>Inspect this page</strong>.</p>
+<p><strong>You&#39;re installed.</strong> Open an ordinary website, click the Page Notes icon, then choose <strong>Point at this page</strong>.</p>
 <h2 id="section-3">3. Make your first note</h2>
 <ol>
-<li>On the website, open Page Notes and click <strong>Select elements</strong>.</li>
-<li>Move your mouse over the page to see the highlight. Click the text, button, or other item you want to comment on.</li>
-<li>You can click several items to discuss them together. Click an item again to deselect it.</li>
-<li>Click <strong>Done selecting</strong>, or press <strong>Esc</strong>.</li>
-<li>Enter your request under <strong>Group instruction</strong>. For example: “Make these two buttons the same width.”</li>
-<li>Click <strong>Add group</strong>. Page Notes adds your feedback to the queue and tries to take an annotated screenshot.</li>
-<li>Repeat for any additional feedback.</li>
+<li>On the website, open Page Notes. Pointing is already on.</li>
+<li>Move your mouse over the page. The highlight uses the visible text, not the HTML tag. Hold <strong>Alt</strong> and scroll to move the target up or down the page structure if the wrong item is highlighted.</li>
+<li>Click the text, button, or other item you want to comment on. A note field appears on the page. Click additional items to discuss them together; click again to deselect.</li>
+<li>Type what should change. For example: “Make these two buttons the same width.” Press <strong>Command + Enter</strong> on Mac / <strong>Ctrl + Enter</strong> on Windows, or click <strong>Add note</strong>.</li>
+<li>Repeat for any additional feedback. Drag on empty space to mark where something is missing.</li>
 </ol>
-<p>Click <strong>Element note</strong> to add a comment about one particular item. Expand a group&#39;s screenshot section to review its images. To capture another part of a long page, scroll there and click <strong>Add screenshot</strong> on that group.</p>
+<p>Name the review at the top of the panel if you want something clearer than the page title. Notes are saved to this Chrome profile as you add them.</p>
+<p>Click <strong>Element note</strong> on a pin to comment about one particular item. If a screenshot is missing, use <strong>Retry screenshot</strong> on that note. To capture another part of a long page, scroll there and click <strong>Add screenshot</strong>.</p>
 <p>Keep the webpage still and active while a screenshot is being taken. A screenshot covers the visible part of the page, not the entire page.</p>
 <h2 id="section-4">4. Suggest different wording quickly</h2>
 <ol>
-<li>Click <strong>Select elements</strong>.</li>
-<li><strong>Double-click</strong> a heading, paragraph, link, or button label.</li>
+<li>With pointing on, <strong>double-click</strong> a heading, paragraph, link, or button label.</li>
 <li>Type your replacement text into the editor that appears over it.</li>
 <li>Click <strong>Add copy edit</strong>, or press <strong>Command + Enter</strong> on Mac / <strong>Ctrl + Enter</strong> on Windows.</li>
 </ol>
-<p>The edit is queued with an instruction such as <strong>Replace Copy with &#39;Start your free trial&#39;</strong>. The actual website remains unchanged.</p>
+<p>The edit is queued with an instruction such as <strong>Replace Copy with &#39;Start your free trial&#39;</strong>. The actual website remains unchanged. The proposed copy is shown as a ghost on the original text so you can review it.</p>
 <p><strong>Cancel</strong> or <strong>Esc</strong> discards text that has not been queued. Switching tabs also cancels an open copy editor, so add the copy edit before leaving the tab.</p>
-<h2 id="section-5">5. Export your feedback or save it for later</h2>
+<h2 id="section-5">5. Send your feedback or keep it for later</h2>
 <h3>Send it to an AI coding assistant</h3>
 <ol>
-<li>Finish adding your groups.</li>
-<li>Click <strong>Export feedback</strong>.</li>
-<li>Choose <strong>Download ZIP</strong>. This is the most complete option: it includes your instructions, screenshots, and technical references that help the assistant find the right elements.</li>
-<li>Give that ZIP to your developer or AI coding assistant. If your assistant does not accept ZIP files, unzip it and provide <strong>feedback.md</strong>, <strong>evidence.json</strong>, and the <strong>screenshots</strong> folder together.</li>
+<li>Finish adding your notes.</li>
+<li>Click <strong>Copy for Cursor</strong>. This copies the written instructions. If there are screenshots, Page Notes also downloads a packet ZIP.</li>
+<li>Paste into your assistant. Attach the ZIP (or its <strong>feedback.md</strong>, <strong>evidence.json</strong>, and <strong>screenshots</strong> folder) when the assistant needs images and locators.</li>
 </ol>
-<p><strong>Copy MD</strong> copies only the written instructions and file references; it does not copy the images. <strong>MD only</strong> downloads that same text as a file. Use <strong>Preview Markdown</strong> if you want to read it first. Markdown is simply a text format with headings and lists.</p>
+<p><strong>Review packet</strong> opens a preview. <strong>Download packet</strong> is the complete ZIP. <strong>Markdown only</strong> is under More formats and does not include images.</p>
 <h3>Keep it on this computer</h3>
-<p>Click <strong>Save backlog</strong>. Later, click the toolbar icon and choose <strong>Open saved backlog</strong>, then <strong>Open session</strong> on the item you want.</p>
-<p>Saving an opened session updates that saved item. <strong>New session</strong> starts a separate one. If asked to replace a queue, save or export anything you want to keep first.</p>
-<p>Saved backlog items stay in this Chrome profile. They do not sync to another computer. Closing Page Notes keeps your working draft, but <strong>closing the webpage tab deletes its unsaved draft</strong>. Use Save backlog before closing a tab or quitting Chrome.</p>
+<p>Notes are saved to the backlog as you add them. Click the toolbar icon and choose <strong>Open saved backlog</strong>, then <strong>Open session</strong> on the review you want. You can also click <strong>Save review</strong>.</p>
+<p>Saving an opened review updates that saved item. <strong>New review</strong> starts a separate one. If asked to replace a queue, export anything extra you want to keep first.</p>
+<p>Saved reviews stay in this Chrome profile. They do not sync to another computer. Closing Page Notes keeps your working draft, but <strong>closing the webpage tab deletes its unsaved draft</strong>. Named reviews in the backlog survive quitting Chrome.</p>
 <h2 id="section-6">6. Close or hide the panel</h2>
 <ul>
-<li><strong>−</strong> temporarily minimizes it so you can reach content underneath. Click <strong>Resume notes</strong> to reopen it.</li>
-<li><strong>×</strong> closes Page Notes and removes its controls from the page. Reopen it from Chrome&#39;s toolbar.</li>
+<li>The panel hides while you write on the page. Click <strong>Resume notes</strong> to reopen the map of notes, send to your agent, or rename the review.</li>
+<li>The close button removes Page Notes from the page. Reopen it from Chrome&#39;s toolbar.</li>
 <li>Switching to another tab disengages inspection. When you return, click the toolbar icon to resume.</li>
-<li><strong>Esc</strong> finishes selection; pressing it again closes the panel.</li>
+<li><strong>Esc</strong> cancels an open note, then finishes pointing, then closes the panel.</li>
 </ul>
 <h2 id="section-7">7. Install an update</h2>
 <p>Updates are manual for this directly shared version.</p>
@@ -135,10 +132,10 @@
 <p>Still stuck? Send the person who shared Page Notes a screenshot of the error, your operating system (Mac or Windows), and the Page Notes version shown on <strong>chrome://extensions</strong>.</p>
 <h2 id="section-9">Privacy and preview status</h2>
 <p>Page Notes stores feedback locally and does not send it to an AI service. You choose what to export and share. Screenshots include everything visible on the page; check them before sharing private information. Uninstalling Page Notes removes its local backlog, so export anything important first.</p>
-<p>This is <strong>preview version 1.2.1</strong>. Automated checks have passed, but full live-browser and visual testing remains pending. Report anything that behaves unexpectedly. Some embedded page sections and protected content cannot be inspected.</p>
+<p>This is <strong>preview version 1.3.0</strong>. Automated checks have passed, but full live-browser and visual testing remains pending. Report anything that behaves unexpectedly. Some embedded page sections and protected content cannot be inspected.</p>
 <h2 id="section-10">Sharing this preview</h2>
-<p>Send the original distribution ZIP and tell the recipient to start with this guide or <strong>START-HERE.html</strong>. Do not send a feedback-export ZIP as the installer. Your feedback is stored in Chrome, not in the extension folder. The <strong>branding</strong> folder contains the announcement banner and full-size icon.</p>
+<p>Send the original distribution ZIP (<strong>page-notes-1.3.0.zip</strong>) and tell the recipient to start with this guide or <strong>START-HERE.html</strong>. Do not send a feedback-export ZIP as the installer. Your feedback is stored in Chrome, not in the extension folder.</p>
 <p>Project repository: <a href="https://github.com/npuxdev/page-notes">npuxdev/page-notes</a>.</p>
-<p>For source-code details and testing notes, see <strong>DEVELOPER.md</strong>.</p>
+<p>For source-code details, branding artwork, and testing notes, see <strong>DEVELOPER.md</strong>.</p>
 <p>Installation steps follow <a href="https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world#load-unpacked">Google&#39;s Chrome extension guide</a>.</p>
 </article></main><footer>Need this guide on paper? Use your browser’s Print command.</footer></body></html>
