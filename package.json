@@ -12,5 +12,6 @@
     "version:patch": "node scripts/version.cjs patch",
     "version:minor": "node scripts/version.cjs minor",
     "version:major": "node scripts/version.cjs major"
-  }
+  },
+  "license": "AGPL-3.0-only"
 }
