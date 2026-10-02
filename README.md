@@ -130,6 +130,15 @@ Page Notes stores feedback locally and does not send it to an AI service. You ch
 
 This is **preview version 1.3.0**. Automated checks have passed, but full live-browser and visual testing remains pending. Report anything that behaves unexpectedly. Some embedded page sections and protected content cannot be inspected.
 
+## License
+
+Page Notes is **dual-licensed**:
+
+- **Open source:** GNU Affero General Public License v3.0 only (**AGPL-3.0-only**). See [LICENSE](LICENSE).
+- **Commercial:** separate commercial terms are available for proprietary or closed-source use where AGPL obligations are not suitable. See [COMMERCIAL-LICENSE.md](COMMERCIAL-LICENSE.md).
+
+The commercial option is an alternative license granted only by a separate written agreement; `COMMERCIAL-LICENSE.md` does not itself grant proprietary-use rights.
+
 ## Sharing this preview
 
 Share the repository: [npuxdev/page-notes](https://github.com/npuxdev/page-notes). Recipients should download the ZIP from **Code** and start with this guide or **START-HERE.html**. Do not send a feedback-export ZIP as the installer. Your feedback is stored in Chrome, not in the extension folder.
